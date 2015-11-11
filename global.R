@@ -37,5 +37,5 @@ countryColor <- colorFactor(topo.colors(10), countries@data$WORK)
 #Generating unique list of countries
 countryList <- unique(countries@data$NAME) %>% as.character() %>% sort()
 
-#Generating map Type
-MapType <- c("","Place of Work Map", "1st Author Map", "All Authors Map", "NOT First Authors Map")
+#Generating map Type List
+MapTypeList <- c("","WORK", "FIRSTPUB", "RESTPUB", "ALLPUB")

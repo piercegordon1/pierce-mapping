@@ -11,8 +11,10 @@ shinyUI(
                             absolutePanel(top = 30, right = 30, draggable=TRUE,
                                           wellPanel(style = "background-color: #ffffff; width: 350px",
                                                     selectizeInput('MapFilter', 'Display a certain chloropleth',
-                                                                   choices = c(t(MapType)), multiple=FALSE),
-                                                    selectizeInput('countryFilter', 'Filter by type(s) of offenses:',
+                                                                   choices= MapTypeList, multiple=FALSE, selected="WORK"),
+                                                    selectizeInput('HideCountry', 'Hide these countries:',
+                                                                   choices= countryList, multiple=TRUE),
+                                                    selectizeInput('countryFilter', 'Show only these countries:',
                                                                    choices = c(countryList), multiple=TRUE)
                                                     
                                           )

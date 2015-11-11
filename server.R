@@ -12,19 +12,13 @@
   #Could you help me figure out why it breaks when you get a chance?
   #The comments below in lines 19-26 are my new inputs, and adding in even one
   #If breaks it. 
-  
+
   filteredData <- reactive({
     if (is.null(input$countryFilter)) {data <- countries}
     else {data <- subset(countries, NAME %in% input$countryFilter)}
-    #if (input$MapFilter == 1) {
-    #    countryColor <- colorFactor(topo.colors(10), countries@data$WORK)
-    #    }
-    #     } else if (input$MapFilter == "1st Author Map") {
-    #    countryColor <- colorFactor(topo.colors(10), countries@data$FIRSTPUB)
-    #    } else if (input$MapFilter == "All Authors Map"){ 
-    #    countryColor <- colorFactor(topo.colors(10), countries@data$ALLPUB)
-    #    } else if (input$MapFilter == "NOT First Authors Map") {
-    # {countryColor <- colorFactor(topo.colors(10), countries@data$RESTPUB)}
+    
+    if (is.null(input$HideCountry)) {data <- data}
+    else {data <- subset(data, !(NAME %in% input$HideCountry))}
   })
   
   output$map <- renderLeaflet({
@@ -36,15 +30,31 @@
       setView(0, 0, zoom = 2)
   })
   
+  
+  #create reactive colorVariable, which updates the color palette based on a user-defined metric
+  colorVariable <- reactive({
+    filteredData()@data[[input$MapFilter]]
+  })
+  
+  # This reactive expression represents the palette function,
+  # which changes as the user makes selections in UI.
+  colorpal <- reactive({
+    colorBin("YlOrRd", colorVariable()) #you can change the color palette here.
+  })
+  
   #update map based on changed inputs
   observe({
+    pal <- colorpal() #set the variable pal equal to the reactive variable colorpal.
+    colorBy <- input$MapFilter
+    
     leafletProxy("map", data = filteredData()) %>%
       clearShapes() %>%
       clearControls() %>%
       addPolygons(stroke=NULL, smoothFactor=0.5, 
-                  color = ~countryColor(WORK), 
-                  popup = ~paste("<strong>Areas of Study :</strong>",WORK, "<strong>Country:</strong>",NAME)) %>% 
-      addLegend(pal=countryColor, values = ~WORK, position="bottomright")
+                  color = ~pal(filteredData()@data[,colorBy]),
+                  opacity = 0.9,
+                  popup = ~paste("<strong>",colorBy,":</strong>",filteredData()@data[,colorBy], "<strong>Country:</strong>",NAME)) %>% 
+      addLegend(title=colorBy, pal=colorpal(), values=filteredData()@data[,colorBy], position="bottomright")
     
   })
 }
