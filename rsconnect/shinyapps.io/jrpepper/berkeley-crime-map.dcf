@@ -1,0 +1,8 @@
+name: berkeley-crime-map
+account: jrpepper
+server: shinyapps.io
+bundleId: 291193
+url: https://jrpepper.shinyapps.io/berkeley-crime-map
+when: 1445234044.39494
+asMultiple: FALSE
+asStatic: FALSE
