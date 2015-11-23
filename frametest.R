@@ -33,7 +33,7 @@ participatory2 <- participatory
 participatory2$WORK <- 0
 participatory2$FIRSTPUB <- 0
 participatory2$ALLPUB <- 0
-participatory2$RESTPUB <- 1
+participatory2$RESTPUB <- 0
 
 #X is a temporary dataframe that MIGHT be necessary. Right now, it is not used.
 #x <- participatory[-c(1,3,4)]
@@ -81,18 +81,19 @@ countrylabel <- "US"
 #Access all countries, to search in articles if the county is available
 #for(i in 1:nrow(participatory2)) {
   #increment the articles being accessed
-  for(j in 1:nrow(articles)) {
+  for(j in 2:nrow(articles)) {
     #is the filtered country available in the 1st Author column?
     if(grepl(articles$Country.of.Publication..1st.Author.[j], countrylabel)) {
       #Loop the countries to search for in the same row, Place of Work column
-      for(k in 1:nrow(participatory2))
+      for(k in 1:nrow(participatory2)) {
         y <- participatory[k,2]
         #Is the current country available in the paper's row, Place of Work column?
         if (any(grepl(y, articles$Place.of.Work[j]))) {
           #Increment the coountry count, and pass it to the reactive country dataset 
           #x[k,2] <- x[k,2] + length(grep(y, articles$Place.of.Work[j]))
-          participatory2$WORK[k] <- length(grep(y, articles$Place.of.Work[j]))
-        }
+          participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, articles$Place.of.Work[j]))
+          }
+      }
     }
   }
 #}
