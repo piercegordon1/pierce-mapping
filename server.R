@@ -19,6 +19,11 @@
     
     if (is.null(input$HideCountry)) {data <- data}
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
+    
+    #if (is.null(input$CrossFilter)) {data <- data}
+    #else {
+    #  data <- participatory2
+    #}
   })
   
   output$map <- renderLeaflet({
@@ -27,7 +32,7 @@
     # entire map is being torn down and recreated).
     leaflet(filteredData()) %>%
       addProviderTiles("CartoDB.Positron") %>%
-      setView(0, 0, zoom = 2)
+      setView(0, 0, zoom = 3)
   })
   
   

@@ -10,12 +10,32 @@ shinyUI(
                             
                             absolutePanel(top = 30, right = 30, draggable=TRUE,
                                           wellPanel(style = "background-color: #ffffff; width: 350px",
-                                                    selectizeInput('MapFilter', 'Display a certain chloropleth',
+                                                    selectizeInput('MapFilter', 'Display a certain chloropleth:',
                                                                    choices= MapTypeList, multiple=FALSE, selected="WORK"),
                                                     selectizeInput('HideCountry', 'Hide these countries:',
-                                                                   choices= countryList, multiple=TRUE),
+                                                                   choices= countryList, multiple=TRUE, selected="United States"),
                                                     selectizeInput('countryFilter', 'Show only these countries:',
-                                                                   choices = c(countryList), multiple=TRUE)
+                                                                   choices = c(countryList), multiple=TRUE),
+                                                    selectizeInput('crossFilter', 'Show where this country works:',
+                                                                    choices = c(countryList), multiple=TRUE),
+                                                   # sliderInput('citations', 'FIlter by Citations', min, max, value, step = NULL, round = FALSE,
+                                                  #             format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                  #             width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                  #             timezone = NULL, dragRange = TRUE),
+                                                  #  sliderInput('lateyear', 'FIlter by Latest Year', min, 2015, value, step = NULL, round = FALSE,
+                                                  #              format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                  #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                  #              timezone = NULL, dragRange = TRUE),
+                                                  #  sliderInput('earlyyear', 'FIlter by Earliest Year', min, 2015, value, step = NULL, round = FALSE,
+                                                  #              format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                  #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                  #              timezone = NULL, dragRange = TRUE),
+                                                    selectizeInput('Authors', 'Filter by Authors:',
+                                                                    choices= countryList, multiple=TRUE),
+                                                    selectizeInput('University', "Filter by 1st Author's University:",
+                                                                   choices= countryList, multiple=TRUE)
+                                                    
+                                                    
                                                     
                                           )
                             )

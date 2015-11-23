@@ -9,11 +9,20 @@ library(RColorBrewer)
 
 #############################
 countries <- readOGR('./world-shapefile', layer = 'TM_WORLD_BORDERS')
+articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
 
 participatory <- read.csv('./data/ParticipatoryData.csv')
 
 #removing South Sudan from my dataset
 participatory <- subset(participatory, COUNTRY!="South Sudan")
+#participatory is the test dynamic list.
+#It is zeroed out in all of the data, 
+#so that is can be incremented dynamically.
+participatory2 <- participatory
+participatory2$WORK <- 0
+participatory2$FIRSTPUB <- 0
+participatory2$ALLPUB <- 0
+participatory2$RESTPUB <- 0
 
 #appending my data to the data in the shapefile
 #countries@data <- cbind(participatory, countries@data)
