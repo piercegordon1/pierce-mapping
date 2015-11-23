@@ -6,6 +6,7 @@ library(rgdal)
 library(raster)
 library(ggmap)
 library(RColorBrewer)
+source("./frametest.R")
 
 #############################
 countries <- readOGR('./world-shapefile', layer = 'TM_WORLD_BORDERS')
@@ -45,6 +46,8 @@ countryColor <- colorFactor(topo.colors(10), countries@data$WORK)
 
 #Generating unique list of countries
 countryList <- unique(countries@data$NAME) %>% as.character() %>% sort()
+countryList2 <- unique(countries@data$ISO2.x) %>% as.character() %>% sort()
+
 
 #Generating map Type List
 MapTypeList <- c("","WORK", "FIRSTPUB", "RESTPUB", "ALLPUB")

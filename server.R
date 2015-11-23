@@ -20,11 +20,17 @@
     if (is.null(input$HideCountry)) {data <- data}
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     
-    #if (is.null(input$CrossFilter)) {data <- frametest(data, country)}
-    #else {
-    #  data <- participatory2
-    #}
+    if (!is.null(input$crossFilter)) {data <- frametest(data, input$crossFilter)}
+    else {data <- data    }
+    
+    return(data)
   })
+  
+  observe({
+    print(head(filteredData(), 20))
+    print(input$crossFilter)
+  })
+  
   
   output$map <- renderLeaflet({
     # Use leaflet() here, and only include aspects of the map that
