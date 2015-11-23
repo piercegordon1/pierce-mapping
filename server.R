@@ -20,7 +20,7 @@
     if (is.null(input$HideCountry)) {data <- data}
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     
-    #if (is.null(input$CrossFilter)) {data <- data}
+    #if (is.null(input$CrossFilter)) {data <- frametest(data, country)}
     #else {
     #  data <- participatory2
     #}
