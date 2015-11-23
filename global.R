@@ -8,7 +8,7 @@ library(ggmap)
 library(RColorBrewer)
 
 #############################
-countries <- readOGR('./world-shapefile', layer = 'TM_WORLD_BORDERS')
+countries <- readOGR('./world-shapefile', layer = 'world3')
 articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
 
 participatory <- read.csv('./data/ParticipatoryData.csv')
