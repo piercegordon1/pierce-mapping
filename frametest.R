@@ -5,16 +5,35 @@
 #Energy and Resources Group
 ##########################
 
-#write a description for what this function does right here.
+#This function filters the raw data in the Articles .csv file for the reactive inputs in the Shiny countries file.
+#countrylabel <- "US"
 
-frametest <- function(data, country) {
-  ###code goes here. ALL THIS DOES IS ONE THING: RETURNS A DATA SET that is 
+#These variables are placeholders made to debug the code before it turns into a function. Keep these a comment when working.
+#data <- countries@data
+#crossFilter <- "UK" 
+#Authors <- ""
+#University <- ""
+
+frametest <- function(data, crossFilter, Authors, University) {
+  ###code goes here. ALL THIS DOES IS ONE THING: RETURNS A DATA SET 
+  ###that filters based upon the inputs given.
   
-  #insert comments
-  countrylabel <- country
+  #There are two critical variables here that the loops use: the labels, and the matches. 
+  #Labels are assigned the Shiny inputs, and the matches see if the labels match the 
+  #information in the current column we care about. Add here to add new filters first.
+
+  authorlabel <- Authors
+  authormatch <- FALSE
+  universitylabel <- University
+  universitymatch <- FALSE
+  countrylabel <- crossFilter
+  countrymatch <- FALSE
   
-  
-  participatory2 <- data
+  #These variables set the reactive country lists where the data is input. Participatory 
+  #is the full list, made by a .csv file, and participatory2 is the reactive dataset, which 
+  #changes based upon the filters chosen.
+  participatory <- data@data
+  participatory2 <- data@data
   participatory2$WORK <- 0
   participatory2$FIRSTPUB <- 0
   participatory2$ALLPUB <- 0
@@ -25,7 +44,7 @@ frametest <- function(data, country) {
   #x[2:5] <- 0
   #x <- matrix(0, nrow = num, ncol = 4)
   
-  #Incrmental variables.
+  #Incrementing variables for each of the loops.
   i <- 1
   j <- 1
   k <- 1
@@ -55,28 +74,51 @@ frametest <- function(data, country) {
   
   ####################################3
   
-  #Access all countries, to search in articles if the county is available
+  #Filter algorithm. Goes through raw data and filters papers that don't match the reactive values.
+  
   #for(i in 1:nrow(participatory2)) {
   #increment the articles being accessed
   for(j in 2:nrow(articles)) {
-    #is the filtered country available in the 1st Author column?
-    if(grepl(articles$Country.of.Publication..1st.Author.[j], countrylabel)) {
-      #Loop the countries to search for in the same row, Place of Work column
-      for(k in 1:nrow(participatory2)) {
-        y <- participatory[k,2]
-        #Is the current country available in the paper's row, Place of Work column?
-        if (any(grepl(y, articles$Place.of.Work[j]))) {
-          #Increment the coountry count, and pass it to the reactive country dataset 
-          #x[k,2] <- x[k,2] + length(grep(y, articles$Place.of.Work[j]))
-          participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, articles$Place.of.Work[j]))
-        }
-      }
+    authormatch <- grepl(authorlabel, articles[[Authors[j]]])
+    universitymatch <- grepl(universitylabel, articles[[Place.of.Publish..1st.author.[j]]])
+    countrymatch <- grepl(countrylabel, articles[[Country.of.Publication..1st.Author.[j]]])
+    
+    if(authorlabel == ""){
+      authormatch <- TRUE
     }
-  }
-  #}
-  
-  
+    if(universitylabel == ""){
+      universitymatch <- TRUE
+    }
+    if(countrylabel == ""){
+      countrymatch <- TRUE
+    }
+   
+    #Used for debugging. See what matching values are being passed to  
+    #cat("AUTHOR ", j,":", authormatch, " ")  
+    #cat("UNIVERSITY ", j,":" , universitymatch, " ") 
+    #cat("COUNTRY ", j,":", countrymatch, "\n")
+
+    
+   if(authormatch && universitymatch && countrymatch) {
+       #Loop the countries to search for in the same row, Place of Work column
+         for(k in 1:nrow(participatory2)) {
+           y <- participatory2$ISO2.x[k]
+           #Is the current country available in the paper's row, Place of Work column?
+           if (any(grepl(y, articles$Place.of.Work[j]))) {
+             #Increment the country count, and pass it to the reactive country dataset 
+            #x[k,2] <- x[k,2] + length(grep(y, articles$Place.of.Work[j]))
+             participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, articles$Place.of.Work[j]))
+           }
+         }
+      }
+    
+    authormatch <- FALSE
+    universitymatch <- FALSE
+    countrymatch <- FALSE
+    
+    
+ }
+
+#This is necessary for the running of the function
  return(participatory2) 
-  
-  
 }

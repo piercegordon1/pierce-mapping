@@ -9,7 +9,7 @@ library(RColorBrewer)
 source("./frametest.R")
 
 #############################
-countries <- readOGR('./world-shapefile', layer = 'TM_WORLD_BORDERS')
+countries <- readOGR('./world-shapefile', layer = 'world3')
 articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
 
 participatory <- read.csv('./data/ParticipatoryData.csv')
@@ -47,7 +47,8 @@ countryColor <- colorFactor(topo.colors(10), countries@data$WORK)
 #Generating unique list of countries
 countryList <- unique(countries@data$NAME) %>% as.character() %>% sort()
 countryList2 <- unique(countries@data$ISO2.x) %>% as.character() %>% sort()
-
+AuthorList <- unique(articles$Authors) %>% as.character() %>% sort()
+UniversityList <- unique(articles$Place.of.Publish..1st.author.) %>% as.character() %>% sort()
 
 #Generating map Type List
 MapTypeList <- c("","WORK", "FIRSTPUB", "RESTPUB", "ALLPUB")

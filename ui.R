@@ -8,7 +8,8 @@ shinyUI(
                                        bottom: 0; overflow: hidden; padding: 0}"),
                             leafletOutput("map", width="100%", height="100%"),
                             
-                            absolutePanel(top = 30, right = 30, draggable=TRUE,
+                            absolutePanel(top = 30, right = 30, draggable=TRUE, 
+                                          
                                           wellPanel(style = "background-color: #ffffff; width: 350px",
                                                     selectizeInput('MapFilter', 'Display a certain chloropleth:',
                                                                    choices= MapTypeList, multiple=FALSE, selected="WORK"),
@@ -31,9 +32,9 @@ shinyUI(
                                                   #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
                                                   #              timezone = NULL, dragRange = TRUE),
                                                     selectizeInput('Authors', 'Filter by Authors:',
-                                                                    choices= countryList, multiple=TRUE),
+                                                                    choices= AuthorList, multiple=TRUE),
                                                     selectizeInput('University', "Filter by 1st Author's University:",
-                                                                   choices= countryList, multiple=TRUE)
+                                                                   choices= UniversityList, multiple=TRUE)
                                                     
                                                     
                                                     
