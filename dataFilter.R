@@ -9,19 +9,21 @@
 #countrylabel <- "US"
 
 #These variables are placeholders made to debug the code before it turns into a function. Keep these a comment when working.
-#data <- countries@data
-#crossFilter <- "UK" 
-#Authors <- ""
-#University <- ""
+data <- countries@data
+crossFilter <- "UK" 
+Authors <- ""
+University <- ""
 
 #dataFilter <- function(data, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
   ###code goes here. ALL THIS DOES IS ONE THING: RETURNS A DATA SET 
   ###that filters based upon the inputs given.
   
-  #There are two critical variables here that the loops use: the labels, and the matches. 
+  #There are two critical variable types here that the loops use: the labels, and the matches. 
   #~Labels are assigned the filters we currently care about in the data, and the ~matches see if the labels match the 
   #information in the current column we care about. Add here to add new filters first.
   
+  yearlow <- YearLow
+  yearhi <- YearHigh
   yearmatch <- FALSE
   authorlabel <- Authors
   authormatch <- FALSE
@@ -46,11 +48,6 @@
   participatory2$FIRSTPUB <- 0
   participatory2$ALLPUB <- 0
   participatory2$RESTPUB <- 0
-  
-  #X is a temporary dataframe that MIGHT be necessary. Right now, it is not used.
-  #x <- participatory[-c(1,3,4)]
-  #x[2:5] <- 0
-  #x <- matrix(0, nrow = num, ncol = 4)
   
   #Incrementing variables for each of the loops.
   i <- 1
@@ -81,35 +78,82 @@
   #respective country categories.
   
   ####################################3
-  #First, the code asks what type of map it wants to generate: a Place of Work map, a 1st Author map, a All Author map, or a "Rest Author" Map.
-  maptest 
-  cat("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
-  maptype <- readLines("stdin", n=1);
-  as.numeric(unlist(strsplit(maptype, ",")));
+  #This code is broken.
+  #First, the code asks what type of map it wants to generate: 
+  #1 = a Place of Work map, 
+  #2 = a 1st Author map, 
+  #3 = a All Author map, 
+  #4 = or a "Rest Author" Map.
   
-  if(maptype == 1) {
-    cat("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
-    crosstype <- readLines("stdin", n=1);
-    as.numeric(unlist(strsplit(crosstype, ",")))
-  } else {
-    crosstype <- 1
+  
+  #maptest 
+  map <- function() {
+    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
+    x <- as.numeric(readLines(n=1));
+    return(x)
   }
-  if(interactive()) fun()
   
+  cross <- function(maptype) {
+    if(maptype == 1){
+      message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+      x <- as.numeric(readLines(n=1));  
+    } else {
+      crosstype == 1
+    }
+    return(x) 
+  }
   
-  print("The map today is: ", maptype, "The crossed dataset are: ",crosstype)
+  maptype <- map()
+  crosstype <- cross(maptype)
+  
+  print("The map today is: ", maptype, "The crossed dataset is: ",crosstype)
+  
+ # maptype = 1
+ #crosstype = 2
   
   #############################################
   #Filter algorithm. Goes through raw data and filters papers that don't match the reactive values.
   
+  ####################
+  #This variable is used as the test variable to indicate if the 
+  #country listed is located in the column of interest, and thus 
+  #the list of second countries is worth adding up to the reactive 
+  #country index.
+  ####################
+  
+  if(crosstype==2){
+    crossarray<-articles$Country.of.Publication..1st.Author.
+  #}else if(crosstype==3){
+  #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+  }else if(crosstype==4){
+    crossarray<-articles$Country.of.Publication..Rest.of.authors.
+  }
+  
+  #####################
+  #This variable is used as the array that is searched inside for instances of countries, 
+  #to be finally incremented in the active Country index.
+  #####################
+  if(maptype==1){
+    maparray<-articles$Place.of.Work
+  }else if(maptype==2){
+    maparray<-articles$Country.of.Publication..1st.Author.
+  #}else if(maptype==3){
+  #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+  }else if(maptype==4){
+    maparray<-articles$Country.of.Publication..Rest.of.authors.
+  }
+  
+    
   #for(i in 1:nrow(participatory2)) {
   #increment the articles being accessed
   for(j in 2:nrow(articles)) {
     authormatch <- grepl(authorlabel, articles[[Authors[j]]])
     universitymatch <- grepl(universitylabel, articles[[Place.of.Publish..1st.author.[j]]])
-    countrymatch <- grepl(countrylabel, articles[[Country.of.Publication..1st.Author.[j]]])
+    countrymatch <- grepl(countrylabel, crossarray[j])
     
-    if(authorlabel == ""){
+   
+    
+     if(authorlabel == ""){
       authormatch <- TRUE
     }
     if(universitylabel == ""){
@@ -118,6 +162,16 @@
     if(countrylabel == ""){
       countrymatch <- TRUE
     }
+    if(publisherlabel == ""){
+      publishermatch <- TRUE
+    }
+    if(gsranklabel == ""){
+      gsrankmatch <- TRUE
+    }
+    if(keywordlabel == ""){
+      keywordmatch <- TRUE
+    }
+    
     
     #Used for debugging. See what matching values are being passed to  
     #cat("AUTHOR ", j,":", authormatch, " ")  
@@ -130,10 +184,10 @@
       for(k in 1:nrow(participatory2)) {
         y <- participatory2$ISO2.x[k]
         #Is the current country available in the paper's row, Place of Work column?
-        if (any(grepl(y, articles$Place.of.Work[j]))) {
+        if (any(grepl(y, maparray[j]))) {
           #Increment the country count, and pass it to the reactive country dataset 
           #x[k,2] <- x[k,2] + length(grep(y, articles$Place.of.Work[j]))
-          participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, articles$Place.of.Work[j]))
+          participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, maparray[j]))
         }
       }
     }
@@ -146,5 +200,5 @@
   }
   
   #This is necessary for the running of the function
-  return(participatory2) 
-}
+ # return(participatory2) 
+#}
