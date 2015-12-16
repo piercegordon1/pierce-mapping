@@ -147,13 +147,21 @@ University <- ""
   #for(i in 1:nrow(participatory2)) {
   #increment the articles being accessed
   for(j in 2:nrow(articles)) {
+    
+    if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+      yearmatch <- TRUE
+    }
     authormatch <- grepl(authorlabel, articles[[Authors[j]]])
     universitymatch <- grepl(universitylabel, articles[[Place.of.Publish..1st.author.[j]]])
     countrymatch <- grepl(countrylabel, crossarray[j])
-    
+    publishermatch <- grepl(publisherlabel, articles$Publisher[j])
+    gsrankmatch <- grepl(gsranklabel, articles$GSRank)
+    keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
    
-    
-     if(authorlabel == ""){
+    if(yearhi == "" && yearlow == ""){
+      yearmatch <- TRUE
+    }
+    if(authorlabel == ""){
       authormatch <- TRUE
     }
     if(universitylabel == ""){
@@ -172,14 +180,13 @@ University <- ""
       keywordmatch <- TRUE
     }
     
-    
     #Used for debugging. See what matching values are being passed to  
     #cat("AUTHOR ", j,":", authormatch, " ")  
     #cat("UNIVERSITY ", j,":" , universitymatch, " ") 
     #cat("COUNTRY ", j,":", countrymatch, "\n")
     
     
-    if(authormatch && universitymatch && countrymatch) {
+    if(yearmatch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loop the countries to search for in the same row, Place of Work column
       for(k in 1:nrow(participatory2)) {
         y <- participatory2$ISO2.x[k]
@@ -192,10 +199,13 @@ University <- ""
       }
     }
     
+    yearmatch <- FALSE
     authormatch <- FALSE
     universitymatch <- FALSE
     countrymatch <- FALSE
-    
+    publishermatch <- FALSE
+    gsrankmatch <- FALSE
+    keywordmatch <- FALSE
     
   }
   
