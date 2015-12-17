@@ -15,6 +15,7 @@
 #University <- ""
 
 frametest <- function(data, crossFilter, Authors, University) {
+  articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
   ###code goes here. ALL THIS DOES IS ONE THING: RETURNS A DATA SET 
   ###that filters based upon the inputs given.
   

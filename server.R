@@ -14,13 +14,13 @@
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     
     if (is.null(input$crossFilter)) {data <- data}
-    else { data <- frametest(data, input$crossFilter, input$Authors, input$University)}
+    else { data <- frametest(data, input$crossFilter, "", "")}
     
   })
   
- # observe ( {
-#    print(head(filteredData(), 10))
-#  })
+  observe ( {
+    print(head(filteredData(), 10))
+  })
 
   
   output$map <- renderLeaflet({
@@ -33,7 +33,7 @@
   })
   
   
-  #create reactive colorVariable, which updates the color palette based on a user-defined metric
+  #create reactive colorVariable, which updates the color palette based on the type of map chosen.
   colorVariable <- reactive({
     filteredData()@data[[input$MapFilter]]
   })
