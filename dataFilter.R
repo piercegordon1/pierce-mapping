@@ -9,12 +9,20 @@
 #countrylabel <- "US"
 
 #These variables are placeholders made to debug the code before it turns into a function. Keep these a comment when working.
-data <- countries@data
-crossFilter <- "UK" 
-Authors <- ""
-University <- ""
+#data <- countries@data
+#crossFilter <- "UK" 
+#Authors <- ""
+#University <- ""
+#YearLow <- ""
+#YearHigh <- ""
+#Authors <- ""
+#University <- "" 
+#Publisher <- ""
+#GSRank <- ""
+#KeywordList <- ""
 
-#dataFilter <- function(data, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
+
+dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
   ###code goes here. ALL THIS DOES IS ONE THING: RETURNS A DATA SET 
   ###that filters based upon the inputs given.
   
@@ -22,6 +30,7 @@ University <- ""
   #~Labels are assigned the filters we currently care about in the data, and the ~matches see if the labels match the 
   #information in the current column we care about. Add here to add new filters first.
   
+  articles <- articlelist
   yearlow <- YearLow
   yearhi <- YearHigh
   yearmatch <- FALSE
@@ -42,8 +51,8 @@ University <- ""
   #These variables set the reactive country lists where the data is input. Participatory 
   #is the full list, made by a .csv file, and participatory2 is the reactive dataset, which 
   #changes based upon the filters chosen.
-  participatory <- data@data
-  participatory2 <- data@data
+  participatory <- countries
+  participatory2 <- countries
   participatory2$WORK <- 0
   participatory2$FIRSTPUB <- 0
   participatory2$ALLPUB <- 0
@@ -78,7 +87,6 @@ University <- ""
   #respective country categories.
   
   ####################################3
-  #This code is broken.
   #First, the code asks what type of map it wants to generate: 
   #1 = a Place of Work map, 
   #2 = a 1st Author map, 
@@ -87,29 +95,29 @@ University <- ""
   
   
   #maptest 
-  map <- function() {
-    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
-    x <- as.numeric(readLines(n=1));
-    return(x)
-  }
+  #map <- function() {
+  #  message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
+  #  x <- as.numeric(readLines(n=1));
+  #  return(x)
+  #}
   
-  cross <- function(maptype) {
-    if(maptype == 1){
-      message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
-      x <- as.numeric(readLines(n=1));  
-    } else {
-      crosstype == 1
-    }
-    return(x) 
-  }
+  #cross <- function(maptype) {
+  #  if(maptype == 1){
+  #    message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+  #    x <- as.numeric(readLines(n=1));  
+  #  } else {
+  #    crosstype == 1
+  #  }
+  #  return(x) 
+  #}
   
-  maptype <- map()
-  crosstype <- cross(maptype)
+  #maptype <- map()
+  #crosstype <- cross(maptype)
   
-  print("The map today is: ", maptype, "The crossed dataset is: ",crosstype)
+  #print("The map today is: ", maptype, "The crossed dataset is: ",crosstype)
   
- # maptype = 1
- #crosstype = 2
+ maptype = 1
+ crosstype = 2
   
   #############################################
   #Filter algorithm. Goes through raw data and filters papers that don't match the reactive values.
@@ -143,22 +151,22 @@ University <- ""
     maparray<-articles$Country.of.Publication..Rest.of.authors.
   }
   
-    
+  #head(articles$Place.of.Publish..1st.author., 10)
   #for(i in 1:nrow(participatory2)) {
   #increment the articles being accessed
   for(j in 2:nrow(articles)) {
     
-    if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
-      yearmatch <- TRUE
-    }
-    authormatch <- grepl(authorlabel, articles[[Authors[j]]])
-    universitymatch <- grepl(universitylabel, articles[[Place.of.Publish..1st.author.[j]]])
+    #if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+    #  yearmatch <- TRUE
+    #}
+    authormatch <- grepl(authorlabel, articles$Authors[j])
+    universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
     countrymatch <- grepl(countrylabel, crossarray[j])
     publishermatch <- grepl(publisherlabel, articles$Publisher[j])
     gsrankmatch <- grepl(gsranklabel, articles$GSRank)
-    keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
+    #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
    
-    if(yearhi == "" && yearlow == ""){
+    if(1 > 0){ #yearhi == ""){  #&& yearlow == ""){
       yearmatch <- TRUE
     }
     if(authorlabel == ""){
@@ -181,15 +189,20 @@ University <- ""
     }
     
     #Used for debugging. See what matching values are being passed to  
-    #cat("AUTHOR ", j,":", authormatch, " ")  
-    #cat("UNIVERSITY ", j,":" , universitymatch, " ") 
-    #cat("COUNTRY ", j,":", countrymatch, "\n")
+    cat (j)
+    cat("YEAR " , yearmatch, "|", yearhi , "|" , yearlow,  "|")  
+    cat("PUBLISHER " , publishermatch, "|") 
+    cat("GS RANK " , gsrankmatch, "|") 
+    cat("KEYWORD" , keywordmatch, "|") 
+    cat("AUTHOR ", authormatch, "|")  
+    cat("UNIVERSITY ", universitymatch, "|") 
+    cat("COUNTRY ", countrymatch, "\n")
     
-    
+ 
     if(yearmatch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loop the countries to search for in the same row, Place of Work column
       for(k in 1:nrow(participatory2)) {
-        y <- participatory2$ISO2.x[k]
+        y <- participatory2$ISO2[k]
         #Is the current country available in the paper's row, Place of Work column?
         if (any(grepl(y, maparray[j]))) {
           #Increment the country count, and pass it to the reactive country dataset 
@@ -208,7 +221,9 @@ University <- ""
     keywordmatch <- FALSE
     
   }
-  
   #This is necessary for the running of the function
- # return(participatory2) 
-#}
+ return(head(participatory2, 15)) 
+}
+
+#run this after aving a function each time to rerun the function:
+#source("C:/Users/Pierce/Desktop/pierce-mapping/dataFilter.R")

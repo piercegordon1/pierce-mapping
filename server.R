@@ -18,9 +18,9 @@
     
   })
   
-  observe ( {
-    print(head(filteredData(), 10))
-  })
+  #observe ( {
+  #  print(head(filteredData(), 10))
+  #})
 
   
   output$map <- renderLeaflet({

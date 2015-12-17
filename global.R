@@ -7,6 +7,7 @@ library(raster)
 library(ggmap)
 library(RColorBrewer)
 source("./frametest.R")
+source("./dataFilter.R")
 
 #############################
 countries <- readOGR('./world-shapefile', layer = 'world3')
