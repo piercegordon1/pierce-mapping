@@ -20,6 +20,14 @@
 #Publisher <- ""
 #GSRank <- ""
 #KeywordList <- ""
+articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
+participatory <- read.csv('./data/ParticipatoryData.csv')
+countries <- readOGR('./world-shapefile', layer = 'world3')
+countries@data$polyorder <- 1 : dim(countries@data)[1]
+tmp <- merge(countries@data, participatory, by = "ISO3", sort = TRUE, all.x = TRUE)
+tmp <- tmp[ order(tmp$polyorder), ]
+countries@data <- tmp
+participatory <- read.csv('./data/ParticipatoryData.csv')
 
 
 dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
@@ -51,8 +59,8 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #These variables set the reactive country lists where the data is input. Participatory 
   #is the full list, made by a .csv file, and participatory2 is the reactive dataset, which 
   #changes based upon the filters chosen.
-  participatory <- countries
-  participatory2 <- countries
+  participatory <- countries@data
+  participatory2 <- countries@data
   participatory2$WORK <- 0
   participatory2$FIRSTPUB <- 0
   participatory2$ALLPUB <- 0
@@ -142,23 +150,20 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #to be finally incremented in the active Country index.
   #####################
   if(maptype==1){
-    maparray<-articles$Place.of.Work
+    maparray <- articles$Place.of.Work
   }else if(maptype==2){
-    maparray<-articles$Country.of.Publication..1st.Author.
+  maparray <- articles$Country.of.Publication..1st.Author.
   #}else if(maptype==3){
   #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
   }else if(maptype==4){
-    maparray<-articles$Country.of.Publication..Rest.of.authors.
+    maparray <- articles$Country.of.Publication..Rest.of.authors.
   }
   
-  #head(articles$Place.of.Publish..1st.author., 10)
-  #for(i in 1:nrow(participatory2)) {
-  #increment the articles being accessed
   for(j in 2:nrow(articles)) {
     
-    #if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
-    #  yearmatch <- TRUE
-    #}
+    if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+      yearmatch <- TRUE
+    }
     authormatch <- grepl(authorlabel, articles$Authors[j])
     universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
     countrymatch <- grepl(countrylabel, crossarray[j])
@@ -166,7 +171,8 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     gsrankmatch <- grepl(gsranklabel, articles$GSRank)
     #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
    
-    if(1 > 0){ #yearhi == ""){  #&& yearlow == ""){
+    #yearmatch issue?
+    if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
     }
     if(authorlabel == ""){
@@ -202,7 +208,12 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     if(yearmatch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loop the countries to search for in the same row, Place of Work column
       for(k in 1:nrow(participatory2)) {
-        y <- participatory2$ISO2[k]
+       
+        
+        #if you see:
+        #Error in grepl(y, maparray[j]) : invalid 'pattern' argument
+        #Make sure participatory2$ISO matches the actual column name.
+        y <- participatory2$ISO2.x[k]
         #Is the current country available in the paper's row, Place of Work column?
         if (any(grepl(y, maparray[j]))) {
           #Increment the country count, and pass it to the reactive country dataset 
@@ -221,9 +232,11 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     keywordmatch <- FALSE
     
   }
-  #This is necessary for the running of the function
+  #This is necessary for the running of the function. 
+  #Change from participatory to participatory2 to test function accuracy.
  return(head(participatory2, 15)) 
 }
 
 #run this after aving a function each time to rerun the function:
 #source("C:/Users/Pierce/Desktop/pierce-mapping/dataFilter.R")
+#dataFilter(articles, countries, "", -1, -1, "", "", "", "", "")
