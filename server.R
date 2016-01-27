@@ -14,7 +14,7 @@
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     
     if (is.null(input$crossFilter)) {data <- data}
-    else { data <- frametest(data, input$crossFilter, "", "")}
+    else { data <- dataFilter(data, input$crossFilter, "", "")}
     
   })
   

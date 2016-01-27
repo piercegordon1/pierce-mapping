@@ -119,14 +119,18 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #These let the user of the function 
   #choose which map they want to use.
   #maptest 
+  
   map <- function() {
     message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
     x <- as.numeric(readLines(n=1));
     return(x)
   }
   
+  maptype <- 0
+  
   cross <- function(maptype) {
-    if(maptype == 1){
+    if(maptype==1){
+    #if(1>0) {
       message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
       x <- as.numeric(readLines(n=1));  
       return(x)
@@ -151,7 +155,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     crossarray<-articles$Place.of.Work
     }else if(crosstype==2){
     crossarray<-articles$Country.of.Publication..1st.Author.
-    #Adding cells of dataframes...how?
+    #BUG Adding cells of dataframes...how?
     #}else if(crosstype==3){
     #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
   }else if(crosstype==4){
@@ -165,7 +169,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     maparray <- articles$Place.of.Work
   }else if(maptype==2){
     maparray <- articles$Country.of.Publication..1st.Author.
-    #Adding cells of dataframes...how?
+    #BUG Adding cells of dataframes...how?
     #}else if(maptype==3){
     #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
   }else if(maptype==4){
@@ -187,9 +191,11 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     countrymatch <- grepl(countrylabel, crossarray[j])
     publishermatch <- grepl(publisherlabel, articles$Publisher[j])
     gsrankmatch <- grepl(gsranklabel, articles$GSRank)
-    #How do we get keyword to match more than the first cell?
+    #BUG How do we get keyword to match more than the first cell?
     #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
-   
+    #
+    #
+    #
     #These matches control for blank spaces; 
     #if blank spaces exist, then these filters are excluded.
     if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
@@ -263,9 +269,42 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #This is necessary for the running of the function. 
   #Change from participatory to participatory2 to test function accuracy.
  cat("Done!")
- return(participatory2) 
+ 
+ writedata <- function() {
+   message("Would you like to write your data to a .csv file for use in other programs? (1 for yes, 0 for no)");
+     x <- as.numeric(readLines(n=1));  
+     return(x)
+ }
+ 
+
+ 
+ e <- 1
+ while(e==1){
+   x = writedata()
+   if(x==1){
+   write.csv(participatory2, file = "C:/Users/Pierce/Desktop/pierce-mapping/data/test.csv")
+     message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Desktop/pierce-mapping/data/test.csv")
+     e <- 0
+   }else if(x==0){
+   message("Okay. Your work is done here!")
+   e <- 0
+   }else{
+   message("Oops, your input was incorrect. Choose a valid input.")
+   e <- 1   
+   }
+ }
+ 
+ return(head(participatory2)) 
 }
 
+########################################################
 #run this after aving a function each time to rerun the function:
+########################################################
 #source("C:/Users/Pierce/Desktop/pierce-mapping/dataFilter.R")
+#
+#
+########################################################
+#to run the file correctly, run ONLY this text:
+########################################################
 #dataFilter(articles, countries, "", -1, -1, "", "", "", "", "")
+#
