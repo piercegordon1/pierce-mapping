@@ -14,13 +14,13 @@
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     
     if (is.null(input$crossFilter)) {data <- data}
-    else { data <- dataFilter(data, input$crossFilter, "", "")}
+    else { data <- dataFilter(countries, data, input$crossFilter, "", -1, -1, "", "", "", "", "")}
     
   })
   
-  #observe ( {
-  #  print(head(filteredData(), 10))
-  #})
+  observe ( {
+    print(head(filteredData(), 10))
+  })
 
   
   output$map <- renderLeaflet({

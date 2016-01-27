@@ -18,7 +18,7 @@ shinyUI(
                                                     selectizeInput('countryFilter', 'Show only these countries:',
                                                                    choices = c(countryList), multiple=TRUE),
                                                     selectizeInput('crossFilter', 'Show where this country works:',
-                                                                    choices = countryList2, multiple=TRUE),
+                                                                    choices = countryList2, multiple=TRUE)
                                                    # sliderInput('citations', 'FIlter by Citations', min, max, value, step = NULL, round = FALSE,
                                                   #             format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
                                                   #             width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
@@ -31,10 +31,10 @@ shinyUI(
                                                   #              format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
                                                   #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
                                                   #              timezone = NULL, dragRange = TRUE),
-                                                    selectizeInput('Authors', 'Filter by Authors:',
-                                                                    choices= AuthorList, multiple=TRUE),
-                                                    selectizeInput('University', "Filter by 1st Author's University:",
-                                                                   choices= UniversityList, multiple=TRUE)
+                                                  #  selectizeInput('Authors', 'Filter by Authors:',
+                                                  #                  choices= AuthorList, multiple=TRUE),
+                                                  #  selectizeInput('University', "Filter by 1st Author's University:",
+                                                  #                 choices= UniversityList, multiple=TRUE)
                                                     
                                                     
                                                     
