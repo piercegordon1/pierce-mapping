@@ -276,31 +276,30 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
      return(x)
  }
  
+ 
+e <- 1
+while(e==1){
+  x = writedata()
+  if(x==1){
+  write.csv(participatory2, file = "test.csv")
+    message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/data/test.csv")
+    e <- 0
+  }else if(x==0){
+    message("Okay. Your work is done here!")
+    e <- 0
+  }else{
+    message("Oops, your input was incorrect. Choose a valid input.")
+    e <- 1
+  }
+}
 
- 
- e <- 1
- while(e==1){
-   x = writedata()
-   if(x==1){
-   write.csv(participatory2, file = "C:/Users/Pierce/Desktop/pierce-mapping/data/test.csv")
-     message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Desktop/pierce-mapping/data/test.csv")
-     e <- 0
-   }else if(x==0){
-   message("Okay. Your work is done here!")
-   e <- 0
-   }else{
-   message("Oops, your input was incorrect. Choose a valid input.")
-   e <- 1   
-   }
- }
- 
  return(head(participatory2)) 
 }
 
 ########################################################
 #run this after aving a function each time to rerun the function:
 ########################################################
-#source("C:/Users/Pierce/Desktop/pierce-mapping/dataFilter.R")
+#source("C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/dataFilter.R")
 #
 #
 ########################################################
