@@ -287,7 +287,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     x = writedata()
     if(x==1){
       write.csv(participatory2, file = "test.csv")
-      message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/data/test.csv")
+      message("Written, ready, and available. Check in the pierce-mapping folder for your file.")
       e <- 0
     }else if(x==0){
       message("Okay. Your work is done here!")
@@ -298,13 +298,13 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     }
   }
   
-  return(head(participatory2)) 
+  return(participatory2) 
 }
 
 ########################################################
 #run this after aving a function each time to rerun the function:
 ########################################################
-#source("C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/dataFilter.R")
+#source("./dataFilter.R")
 #
 #
 ########################################################
