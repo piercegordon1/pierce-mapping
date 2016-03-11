@@ -13,6 +13,7 @@ library(rgdal)
 library(raster)
 library(ggmap)
 library(RColorBrewer)
+Sys.setlocale('LC_ALL','C');
 
 #These are placeholders for the function to see if it works when fed the input.
 #This function filters the raw data in the Articles .csv file for the reactive inputs in the Shiny countries file.
@@ -122,28 +123,35 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #These temporary codes let the user of the function 
   #choose which map they want to use. The authors are meant only to cross with Places of Work: either the Place of work is the input, and thus author maps will show, or an author location is the input, and thus place of work maps will show.
   
-  
   map <- function() {
-    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
-    x <- as.numeric(readLines(n=1));
-    return(x)
+    d <- 1;
+    return(d);
   }
+  #map <- function() {
+    #message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
+    #x <- as.numeric(readLines(n=1));
+    #return(x)
+  #}
   
   maptype <- 0
   
-  cross <- function(maptype) {
-    if(maptype==1){
+  #cross <- function(maptype) {
+    #if(maptype==1){
       #if(1>0) {
-      message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
-      x <- as.numeric(readLines(n=1));  
-      return(x)
-    } else {
-      message("The crossed data will be the Place of Work data.");
-      x <- 1
-      return(x)
-    }
-  }
+      #message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+      #x <- as.numeric(readLines(n=1));  
+      #return(x)
+    #} else {
+    #  message("The crossed data will be the Place of Work data.");
+      #x <- 1
+      #return(x)
+    #}
+  #}
   
+  cross <- function(maptype) {
+    d <- 2;
+    return(d);
+  }
   maptype <- map()
   crosstype <- cross(maptype)
   #This is for debugging, to make sure the main parts of the code are working.
@@ -161,7 +169,11 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #BUG Adding cells of dataframes...how?
     #}else if(crosstype==3){
     #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
-  }else if(crosstype==4){
+  } else if (crosstype==3){ 
+    df <- data.frame(a = articles$Country.of.Publication..Rest.of.authors., 
+    b = articles$Country.of.Publication..1st.Author.);
+    crossarray <- rowSums(df)
+  } else if(crosstype==4){
     crossarray<-articles$Country.of.Publication..Rest.of.authors.
   }
   
@@ -183,9 +195,9 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #############################################
   
   
-  cat("Working....")
+  #cat("Working....")
   for(j in 2:nrow(articles)) {
-    cat(".")
+    #cat(".")
     if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
       yearmatch <- TRUE
     }
@@ -195,7 +207,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     countrymatch <- grepl(countrylabel, crossarray[j])
     publishermatch <- grepl(publisherlabel, articles$Publisher[j])
     gsrankmatch <- grepl(gsranklabel, articles$GSRank)
-    #BUG How do we get keyword to match more than the first cell?
+    #BUG How do we get keyword to match more than the first cell? multiple columns 
     #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
     #
     #
@@ -276,9 +288,9 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   
   #This code gives the user the opportunity to write the new completed participatory2 data to an excel spreadsheet.
   writedata <- function() {
-    message("Would you like to write your data to a .csv file for use in other programs? (1 for yes, 0 for no)");
-    x <- as.numeric(readLines(n=1));  
-    return(x)
+    #message("Would you like to write your data to a .csv file for use in other programs? (1 for yes, 0 for no)");
+    #x <- as.numeric(readLines(n=1));  
+    return(1)
   }
   
   
@@ -310,6 +322,6 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
 ########################################################
 #This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
 ########################################################
-#dataFilter(articles, countries, "", -1, -1, "", "", "", "", "")
+dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
 #
-
+#source("URAP/pierce-mapping/dataFilter.R");

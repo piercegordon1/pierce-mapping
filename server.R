@@ -19,7 +19,7 @@
   })
   
   observe ( {
-    print(head(filteredData(), 10))
+    print(head(filteredData(), 10)) 
   })
 
   
@@ -32,7 +32,7 @@
       setView(0, 0, zoom = 3)
   })
   
-  
+#HOW DOES ALL OF THIS WORK??   
   #create reactive colorVariable, which updates the color palette based on the type of map chosen.
   colorVariable <- reactive({
     filteredData()@data[[input$MapFilter]]
@@ -44,7 +44,7 @@
     colorBin("YlOrRd", colorVariable()) #you can change the color palette here.
   })
   
-  #update map based on changed inputs
+  #update map based on changed inputs figure out how this is working and see if its similar to the diagram!!! 
   observe({
     pal <- colorpal() #set the variable pal equal to the reactive variable colorpal.
     colorBy <- input$MapFilter
