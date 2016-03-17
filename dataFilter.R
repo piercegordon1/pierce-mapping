@@ -327,3 +327,6 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
 dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
 #
 #source("URAP/pierce-mapping/dataFilter.R");
+#####
+
+#######
