@@ -169,14 +169,13 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #BUG Adding cells of dataframes...how?
     #}else if(crosstype==3){
     #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
-  } else if (crosstype==3){ 
+  } else if (crosstype==3){ # concatenation instead of adding 
     df <- data.frame(a = articles$Country.of.Publication..Rest.of.authors., 
     b = articles$Country.of.Publication..1st.Author.);
     crossarray <- rowSums(df)
   } else if(crosstype==4){
     crossarray<-articles$Country.of.Publication..Rest.of.authors.
   }
-  
   
   #This is where the sibling array to cross array is assigned its column: if crossarray is Places of Work, the maparray is 1st Authors. This variable is used as the array where the country counting occurs 
   if(maptype==1){
@@ -201,6 +200,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
       yearmatch <- TRUE
     }
+    #print("dataFilter.R line 209")
     #These preliminary tests check if there is a match between the user-defined input and the current row.
     authormatch <- grepl(authorlabel, articles$Authors[j])
     universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
@@ -214,6 +214,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #
     #These matches control for blank spaces; 
     #if the user made one of the filters blank, then these filters are excluded as those which filter numbers from the program.
+    #print("dataFilter.R line 223")
     if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
     }
@@ -310,7 +311,8 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     }
   }
   
-  return(participatory2) 
+  return(participatory2) #normal data frame countries = large spatial 
+  print("return line 315")
 }
 
 ########################################################
