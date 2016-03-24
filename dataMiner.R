@@ -1,5 +1,3 @@
-
-
 ##########################
 #Pierce Gordon
 #Energy and Resources Group
@@ -13,7 +11,6 @@ library(rgdal)
 library(raster)
 library(ggmap)
 library(RColorBrewer)
-Sys.setlocale('LC_ALL','C');
 
 #These are placeholders for the function to see if it works when fed the input.
 #This function filters the raw data in the Articles .csv file for the reactive inputs in the Shiny countries file.
@@ -49,7 +46,9 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 #Make sure to run the entire file so the adequate variables are available, before running the function at the bottom.
 
 #here the function starts,
-dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
+dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
+  
+  #This version of DataMiner is used for active user input, for use with QGIS mapping software.
   
   ###For the entire code, all it does it take in the article list, filter it in the needed manner, and return the required country list based upon the inputs given.
   
@@ -123,35 +122,28 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #These temporary codes let the user of the function 
   #choose which map they want to use. The authors are meant only to cross with Places of Work: either the Place of work is the input, and thus author maps will show, or an author location is the input, and thus place of work maps will show.
   
-  # map <- function() {
-  #   d <- 1;
-  #   return(d);
-  # }
+  
   map <- function() {
-  message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
-  x <- as.numeric(readLines(n=1));
-  return(x)
+    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
+    x <- as.numeric(readLines(n=1));
+    return(x)
   }
   
+  maptype <- 0
   
   cross <- function(maptype) {
-  if(maptype==1){
-  if(1>0) {
-  message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
-  x <- as.numeric(readLines(n=1));
-  return(x)
-  } else {
-   message("The crossed data will be the Place of Work data.");
-  x <- 1
-  return(x)
+    if(maptype==1){
+      #if(1>0) {
+      message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+      x <- as.numeric(readLines(n=1));  
+      return(x)
+    } else {
+      message("The crossed data will be the Place of Work data.");
+      x <- 1
+      return(x)
+    }
   }
-  }
-  }
-
-  cross <- function(maptype) {
-    d <- 2;
-    return(d);
-  }
+  
   maptype <- map()
   crosstype <- cross(maptype)
   #This is for debugging, to make sure the main parts of the code are working.
@@ -169,13 +161,10 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #BUG Adding cells of dataframes...how?
     #}else if(crosstype==3){
     #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
-  } else if (crosstype==3){ # concatenation instead of adding 
-    df <- data.frame(a = articles$Country.of.Publication..Rest.of.authors., 
-    b = articles$Country.of.Publication..1st.Author.);
-    crossarray <- rowSums(df)
-  } else if(crosstype==4){
+  }else if(crosstype==4){
     crossarray<-articles$Country.of.Publication..Rest.of.authors.
   }
+  
   
   #This is where the sibling array to cross array is assigned its column: if crossarray is Places of Work, the maparray is 1st Authors. This variable is used as the array where the country counting occurs 
   if(maptype==1){
@@ -194,27 +183,25 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #############################################
   
   
-  #cat("Working....")
+  cat("Working....")
   for(j in 2:nrow(articles)) {
-    #cat(".")
+    cat(".")
     if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
       yearmatch <- TRUE
     }
-    #print("dataFilter.R line 209")
     #These preliminary tests check if there is a match between the user-defined input and the current row.
     authormatch <- grepl(authorlabel, articles$Authors[j])
     universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
     countrymatch <- grepl(countrylabel, crossarray[j])
     publishermatch <- grepl(publisherlabel, articles$Publisher[j])
     gsrankmatch <- grepl(gsranklabel, articles$GSRank)
-    #BUG How do we get keyword to match more than the first cell? multiple columns 
+    #BUG How do we get keyword to match more than the first cell?
     #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
     #
     #
     #
     #These matches control for blank spaces; 
     #if the user made one of the filters blank, then these filters are excluded as those which filter numbers from the program.
-    #print("dataFilter.R line 223")
     if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
     }
@@ -289,9 +276,9 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   
   #This code gives the user the opportunity to write the new completed participatory2 data to an excel spreadsheet.
   writedata <- function() {
-    #message("Would you like to write your data to a .csv file for use in other programs? (1 for yes, 0 for no)");
-    #x <- as.numeric(readLines(n=1));  
-    return(1)
+    message("Would you like to write your data to a .csv file for use in other programs? (1 for yes, 0 for no)");
+    x <- as.numeric(readLines(n=1));  
+    return(x)
   }
   
   
@@ -300,7 +287,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     x = writedata()
     if(x==1){
       write.csv(participatory2, file = "test.csv")
-      message("Written, ready, and available. Check in the pierce-mapping folder for your file.")
+      message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/data/test.csv")
       e <- 0
     }else if(x==0){
       message("Okay. Your work is done here!")
@@ -311,20 +298,18 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     }
   }
   
-  return(head(participatory2)) #normal data frame countries = large spatial 
-  #print("return line 315")
+  return(head(participatory2)) 
 }
 
 ########################################################
 #run this after aving a function each time to rerun the function:
 ########################################################
-#source("./dataFilter.R")
+#source("C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/dataFilter.R")
 #
 #
 ########################################################
 #This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
 ########################################################
-#dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
+#dataMiner(articles, countries, "", -1, -1, "", "", "", "", "")
 #
-#source("URAP/pierce-mapping/dataFilter.R");
-#Changes;
+
