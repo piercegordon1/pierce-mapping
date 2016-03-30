@@ -46,16 +46,16 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 #Make sure to run the entire file so the adequate variables are available, before running the function at the bottom.
 
 #here the function starts,
-dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
+dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, Authors, University, Publisher, GSRank, KeywordList) {
   
   #This version of DataMiner is used for active user input, for use with QGIS mapping software.
   
   ###For the entire code, all it does it take in the article list, filter it in the needed manner, and return the required country list based upon the inputs given.
   
-  #There are two critical variable types I've created here 
+  #There are two critical variable types I’ve created here 
   #that the filter loops use: the labels, and the matches. 
   #~Labels are assigned the inputs fed into DataFilter by 
-  #the function's user, and the ~matches test if there is 
+  #the function’s user, and the ~matches test if there is 
   #this variable has been assigned a user input.If new 
   #filters need to be made. put them here first
   
@@ -64,6 +64,9 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
   yearlow <- YearLow
   yearhi <- YearHigh
   yearmatch <- FALSE
+  citelow <- CiteLow
+  citehi <- CiteHigh
+  citematch <- FALSE
   authorlabel <- Authors
   authormatch <- FALSE
   universitylabel <- University
@@ -186,8 +189,11 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
   cat("Working....")
   for(j in 2:nrow(articles)) {
     cat(".")
-    if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+    if(articles$Cites[j] <= yearhi && articles$Year[j] >= yearlow) {
       yearmatch <- TRUE
+    }
+    if(articles$Cites[j] <= citehi && articles$Year[j] >= citelow) {
+      citematch <- TRUE
     }
     #These preliminary tests check if there is a match between the user-defined input and the current row.
     authormatch <- grepl(authorlabel, articles$Authors[j])
@@ -204,6 +210,9 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
     #if the user made one of the filters blank, then these filters are excluded as those which filter numbers from the program.
     if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
+    }
+    if(citehi == -1 || citelow == -1){
+      citematch <- TRUE
     }
     if(authorlabel == ""){
       authormatch <- TRUE
@@ -236,7 +245,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
     
     
     #This is the filter algorithm. First, it checks if all of the matches in this column are true. If so, it runs the rest of the code.
-    if(yearmatch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
+    if(yearmatch && citematch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loops the countries to search in the desired row for the countries of interest, and prepares participatory2 to be modified by its code.
       for(k in 1:nrow(participatory2)) {
         #if you see:
@@ -268,6 +277,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
     publishermatch <- FALSE
     gsrankmatch <- FALSE
     keywordmatch <- FALSE
+    citematch <- FALSE
     
   }
   #This is necessary for the running of the function. 
@@ -298,7 +308,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
     }
   }
   
-  return(head(participatory2)) 
+  return(participatory2)) 
 }
 
 ########################################################
@@ -310,6 +320,6 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Au
 ########################################################
 #This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
 ########################################################
-#dataMiner(articles, countries, "", -1, -1, "", "", "", "", "")
+#dataMiner(articles, countries, "", -1, -1, -1, -1, "", "", "", "", "")
 #
 
