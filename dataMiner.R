@@ -308,7 +308,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     }
   }
   
-  return(participatory2)) 
+  return(participatory2) 
 }
 
 ########################################################
