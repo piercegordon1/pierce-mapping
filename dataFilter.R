@@ -193,8 +193,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   }else if(crosstype==4){
     s<-unlist(strsplit(articles$Country.of.Publication..1st.Author., ", "))
     t<-unlist(strsplit(articles$Country.of.Publication..Rest.of.authors., ", "))
-    all<-c(s, t)
-    maparray<-unique(all)
+    maparray<-c(s, t)
   }
   
   
