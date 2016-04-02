@@ -1,5 +1,6 @@
 
 
+
 ##########################
 #Pierce Gordon
 #Energy and Resources Group
@@ -166,15 +167,16 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     crossarray<-articles$Place.of.Work
   }else if(crosstype==2){
     crossarray<-articles$Country.of.Publication..1st.Author.
-    #BUG Adding cells of dataframes...how?
-    #}else if(crosstype==3){
-    #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
-  } else if (crosstype==3){ # concatenation instead of adding 
-    df <- data.frame(a = articles$Country.of.Publication..Rest.of.authors., 
-    b = articles$Country.of.Publication..1st.Author.);
-    crossarray <- rowSums(df)
-  } else if(crosstype==4){
-    crossarray<-articles$Country.of.Publication..Rest.of.authors.
+    #~BUG Adding cells of dataframes...how?
+    #~}else if(crosstype==3){
+    #~ crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+    #~  just a list of countries
+  }else if(crosstype  ==3){
+    crossarray<-articles$Country.of.Publication.Rest.of.authors.
+  }else if(crosstype==4){
+    s<-unlist(strsplit(articles$Country.of.Publication..1st.Author., ", "))
+    t<-unlist(strsplit(articles$Country.of.Publication..Rest.of.authors., ", "))
+    crossarray<-c(s, t)
   }
   
   #This is where the sibling array to cross array is assigned its column: if crossarray is Places of Work, the maparray is 1st Authors. This variable is used as the array where the country counting occurs 
@@ -182,12 +184,19 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     maparray <- articles$Place.of.Work
   }else if(maptype==2){
     maparray <- articles$Country.of.Publication..1st.Author.
-    #BUG Adding cells of dataframes...how?
-    #}else if(maptype==3){
-    #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
-  }else if(maptype==4){
+  }else if(maptype==3){
     maparray <- articles$Country.of.Publication..Rest.of.authors.
+    #~BUG Adding cells of dataframes...how?
+    #~}else if(maptype==4){
+    #~  maparray<-articles$Country.of.Publication..Rest.of.authors.
+    #~  +articles$Country.of.Publication..1st.Author.
+  }else if(crosstype==4){
+    s<-unlist(strsplit(articles$Country.of.Publication..1st.Author., ", "))
+    t<-unlist(strsplit(articles$Country.of.Publication..Rest.of.authors., ", "))
+    all<-c(s, t)
+    maparray<-unique(all)
   }
+  
   
   #############################################
   #Filter algorithm. Goes through raw data and filters papers that don't match the reactive values.
@@ -215,6 +224,14 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #These matches control for blank spaces; 
     #if the user made one of the filters blank, then these filters are excluded as those which filter numbers from the program.
     #print("dataFilter.R line 223")
+    for(i in 28:32){
+      keywordmatch <- grepl(keywordlabel, articles[i])
+      if (keywordmatch) {
+        break
+      }
+    }
+    
+    
     if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
     }
