@@ -340,7 +340,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
 ########################################################
 #This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
 ########################################################
-dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
+#dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
 #
 #source("URAP/pierce-mapping/dataFilter.R");
 #Changes;
@@ -354,5 +354,3 @@ dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
 
 
 #Hello
-
-#sophie_1

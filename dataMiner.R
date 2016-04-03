@@ -11,6 +11,7 @@ library(rgdal)
 library(raster)
 library(ggmap)
 library(RColorBrewer)
+library(stringr)
 
 #These are placeholders for the function to see if it works when fed the input.
 #This function filters the raw data in the Articles .csv file for the reactive inputs in the Shiny countries file.
@@ -25,7 +26,8 @@ library(RColorBrewer)
 #Authors <- ""
 #University <- "" 
 #Publisher <- ""
-#GSRank <- ""
+#GSRankHigh <- ""
+#GSRankLow <- ""
 #KeywordList <- ""
 
 #These lines load the necessary files to run the code: the article spreadsheet, the inital country list. and the country shapefiles. 
@@ -46,7 +48,7 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 #Make sure to run the entire file so the adequate variables are available, before running the function at the bottom.
 
 #here the function starts,
-dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, Authors, University, Publisher, GSRank, KeywordList) {
+dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, GSRankLow, GSRankHigh, Authors, University, Publisher,  KeywordList) {
   
   #This version of DataMiner is used for active user input, for use with QGIS mapping software.
   
@@ -67,18 +69,36 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   citelow <- CiteLow
   citehi <- CiteHigh
   citematch <- FALSE
-  authorlabel <- Authors
-  authormatch <- FALSE
-  universitylabel <- University
-  universitymatch <- FALSE
-  countrylabel <- crossFilter
-  countrymatch <- FALSE
-  publisherlabel <- Publisher
-  publishermatch <- FALSE
-  gsranklabel <- GSRank
+  gsranklow <- GSRankLow
+  gsrankhi <- GSRankHigh
   gsrankmatch <- FALSE
+  authorlabel <- Authors
+  universitylabel <- University
+  countrylabel <- crossFilter
+  publisherlabel <- Publisher
   keywordlabel <-KeywordList
+  authormatch <- FALSE
+  universitymatch <- FALSE
+  countrymatch <- FALSE
+  publishermatch <- FALSE
   keywordmatch <- FALSE
+
+  
+  if(Authors!="") {
+    authorlabel <- unlist(strsplit(authorlabel, " "))
+  }
+  if(University!="") {
+    universitylabel <- unlist(strsplit(universitylabel, " ")) 
+  }
+  if(crossFilter!="") {
+    countrylabel <- unlist(strsplit(countrylabel, " "))
+  }
+  if(Publisher!="") {
+    publisherlabel <- unlist(strsplit(publisherlabel, " "))
+  }
+  if(KeywordList!="") {
+    keywordlabel <- unlist(strsplit(keywordlabel, " "))
+  }
   
   
   #These variables set the reactive country lists where the data is input. Participatory 
@@ -127,7 +147,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   
   
   map <- function() {
-    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = AllAuth, 4= RestAuth ");
+    message("What type of map do you want to display? 1 = Work, 2 = 1stAuth, 3 = RestAuth, 4= AllAuth ");
     x <- as.numeric(readLines(n=1));
     return(x)
   }
@@ -137,7 +157,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   cross <- function(maptype) {
     if(maptype==1){
       #if(1>0) {
-      message("What type of Author Data do you want to cross with the data? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+      message("What type of Author Column do you want to be the filter? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
       x <- as.numeric(readLines(n=1));  
       return(x)
     } else {
@@ -158,27 +178,28 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   #the list of second countries is worth adding up to the reactive 
   #country index. The column assigned to the variable (Place of Work, 1st Author, etc.) is chosen here.
   if(crosstype==1){
-    crossarray<-articles$Place.of.Work
+    crossarray<-sapply(articles$Place.of.Work, as.character)
   }else if(crosstype==2){
-    crossarray<-articles$Country.of.Publication..1st.Author.
-    #BUG Adding cells of dataframes...how?
-    #}else if(crosstype==3){
-    #  crossarray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+    crossarray<-sapply(articles$Country.of.Publication..1st.Author., as.character)
+  }else if(crosstype  ==3){
+    crossarray<-sapply(articles$Country.of.Publication..Rest.of.authors., as.character)
   }else if(crosstype==4){
-    crossarray<-articles$Country.of.Publication..Rest.of.authors.
+    s<-sapply(articles$Country.of.Publication..1st.Author., as.character)
+    t<-sapply(articles$Country.of.Publication..Rest.of.authors., as.character)
+    crossarray<-paste(s, t)
   }
-  
   
   #This is where the sibling array to cross array is assigned its column: if crossarray is Places of Work, the maparray is 1st Authors. This variable is used as the array where the country counting occurs 
   if(maptype==1){
-    maparray <- articles$Place.of.Work
+    maparray <- sapply(articles$Place.of.Work, as.character)
   }else if(maptype==2){
-    maparray <- articles$Country.of.Publication..1st.Author.
-    #BUG Adding cells of dataframes...how?
-    #}else if(maptype==3){
-    #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+    maparray <- sapply(articles$Country.of.Publication..1st.Author., as.character)
+  }else if(maptype==3){
+    maparray <- sapply(articles$Country.of.Publication..Rest.of.authors., as.character)
   }else if(maptype==4){
-    maparray <- articles$Country.of.Publication..Rest.of.authors.
+    s<-sapply(articles$Country.of.Publication..1st.Author., as.character)
+    t<-sapply(articles$Country.of.Publication..Rest.of.authors., as.character)
+    maparray<-paste(s, t)
   }
   
   #############################################
@@ -186,51 +207,85 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   #############################################
   
   
-  cat("Working....")
+  cat("Working")
   for(j in 2:nrow(articles)) {
     cat(".")
-    if(articles$Cites[j] <= yearhi && articles$Year[j] >= yearlow) {
-      yearmatch <- TRUE
-    }
-    if(articles$Cites[j] <= citehi && articles$Year[j] >= citelow) {
-      citematch <- TRUE
-    }
+
     #These preliminary tests check if there is a match between the user-defined input and the current row.
-    authormatch <- grepl(authorlabel, articles$Authors[j])
-    universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
-    countrymatch <- grepl(countrylabel, crossarray[j])
-    publishermatch <- grepl(publisherlabel, articles$Publisher[j])
-    gsrankmatch <- grepl(gsranklabel, articles$GSRank)
-    #BUG How do we get keyword to match more than the first cell?
-    #keywordmatch <- grepl(keywordlabel, articles$Second.Keyword) || grepl(keywordlabel, articles$X) ||  grepl(keywordlabel, articles$X.1) ||  grepl(keywordlabel, articles$X.2) ||  grepl(keywordlabel, articles$X.3) ||  grepl(keywordlabel, articles$X.4) ||  grepl(keywordlabel, articles$X.5) || grepl(keywordlabel, articles$X.6) || 
-    #
-    #
-    #
-    #These matches control for blank spaces; 
-    #if the user made one of the filters blank, then these filters are excluded as those which filter numbers from the program.
-    if(yearhi == -1 || yearlow == -1){ #(1>0){ different checks
+    #This code searches in multiple columns for the available keywords.
+
+    if(yearhi == -1 && yearlow == -1){ #(1>0){ different checks
       yearmatch <- TRUE
+    } else {
+      if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+        yearmatch <- TRUE
+      }
     }
-    if(citehi == -1 || citelow == -1){
+    if(citehi == -1 && citelow == -1){
       citematch <- TRUE
+    } else {
+      if(articles$Cites[j] <= citehi && articles$Cites[j] >= citelow) {
+        citematch <- TRUE
+      }
+    }
+    if(gsranklow == -1 && gsrankhi == -1){
+      gsrankmatch <- TRUE
+    } else {
+      if(articles$GSRank[j] <=  gsrankhi && articles$GSRank[j] >= gsranklow) {
+        gsrankmatch <- TRUE
+      }
     }
     if(authorlabel == ""){
       authormatch <- TRUE
+    } else {
+      for(l in 1:length(authorlabel)){
+        authormatch <- grepl(authorlabel[l], articles$Authors[j])
+        if (authormatch) {
+          break
+        }
+      }
     }
     if(universitylabel == ""){
       universitymatch <- TRUE
+    } else {
+      for(l in 1:length(universitylabel)){
+        universitymatch <- grepl(universitylabel[l], articles$Place.of.Publish..1st.author.[j])
+        if (universitymatch) {
+          break
+        }
+      }
     }
     if(countrylabel == ""){
       countrymatch <- TRUE
+    } else {
+      for(l in 1:length(countrylabel)){
+        countrymatch <- grepl(countrylabel[l], crossarray[j])
+        if (countrymatch) {
+          break
+        }
+      }
     }
     if(publisherlabel == ""){
       publishermatch <- TRUE
-    }
-    if(gsranklabel == ""){
-      gsrankmatch <- TRUE
+    } else {
+      for(l in 1:length(publisherlabel)){
+        publishermatch <- grepl(publisherlabel, articles$Publisher[j])
+        if (publishermatch) {
+          break
+        }
+      }
     }
     if(keywordlabel == ""){
       keywordmatch <- TRUE
+    } else {
+      for(l in 1:length(keywordlabel)){
+        for(i in 28:32){
+          keywordmatch <- grepl(keywordlabel[l], articles[j,i])
+          if (keywordmatch) {
+            break
+          }
+        }
+      }
     }
     
     #Used for debugging. We can see what matching values are being passed to different parts of the code.
@@ -247,23 +302,23 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     #This is the filter algorithm. First, it checks if all of the matches in this column are true. If so, it runs the rest of the code.
     if(yearmatch && citematch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loops the countries to search in the desired row for the countries of interest, and prepares participatory2 to be modified by its code.
+      z <- sapply(participatory2$ISO2.x, as.character)
       for(k in 1:nrow(participatory2)) {
         #if you see:
         #Error in grepl(y, maparray[j]) : invalid 'pattern' argument
         #Make sure participatory2$ISO matches the actual column name.
-        y <- participatory2$ISO2.x[k]
+        y <- z[k]
         #Is the current country available in the paper's row, Place of Work column?
         if (any(grepl(y, maparray[j]))) {
           #Increment the country count, and pass it to the reactive country dataset 
           if(maptype==1){
-            participatory2$WORK[k] <- participatory2$WORK[k] + length(grep(y, maparray[j]))
+            participatory2$WORK[k] <- participatory2$WORK[k] + str_count( maparray[j], pattern = y)
           }else if(maptype==2){
-            participatory2$ALLPUB[k] <- participatory2$ALLPUB[k] + length(grep(y, maparray[j]))
-            #Adding cells of dataframes...how?
-            #}else if(maptype==3){
-            #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
+            participatory2$FIRSTPUB[k] <- participatory2$FIRSTPUB[k] + str_count( maparray[j], pattern = y)
+          }else if(maptype==3){
+            participatory2$RESTPUB[k] <- participatory2$RESTPUB[k] + str_count( maparray[j], pattern = y)
           }else if(maptype==4){
-            participatory2$RESTPUB[k] <- participatory2$RESTPUB[k] + length(grep(y, maparray[j]))
+            participatory2$ALLPUB[k] <- participatory2$ALLPUB[k] + str_count( maparray[j], pattern = y)
           }
         }
       }
@@ -318,8 +373,14 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
 #
 #
 ########################################################
-#This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
+#This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available,
+#before running the function here at the bottom.
 ########################################################
-#dataMiner(articles, countries, "", -1, -1, -1, -1, "", "", "", "", "")
+#Variables corresponding with the function:
+#(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, GSRankLow, GSRankHigh, Authors, University, Publisher,  KeywordList)
+#dataMiner(articles, countries, "", -1, -1, -1, -1, -1, -1, "", "", "", "")
 #
-
+#
+#
+#
+#
