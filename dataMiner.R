@@ -154,16 +154,23 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   
   maptype <- 0
   
+
   cross <- function(maptype) {
+
     if(maptype==1){
+      if(crossFilter != "") {
       #if(1>0) {
       message("What type of Author Column do you want to be the filter? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
       x <- as.numeric(readLines(n=1));  
       return(x)
+      } else {
+        x <- 2
+      }
     } else {
       message("The crossed data will be the Place of Work data.");
       x <- 1
       return(x)
+    
     }
   }
   
@@ -235,7 +242,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
         gsrankmatch <- TRUE
       }
     }
-    if(authorlabel == ""){
+    if(authorlabel[1] == ""){
       authormatch <- TRUE
     } else {
       for(l in 1:length(authorlabel)){
@@ -245,7 +252,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
         }
       }
     }
-    if(universitylabel == ""){
+    if(universitylabel[1] == ""){
       universitymatch <- TRUE
     } else {
       for(l in 1:length(universitylabel)){
@@ -255,7 +262,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
         }
       }
     }
-    if(countrylabel == ""){
+    if(countrylabel[1] == ""){
       countrymatch <- TRUE
     } else {
       for(l in 1:length(countrylabel)){
@@ -265,7 +272,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
         }
       }
     }
-    if(publisherlabel == ""){
+    if(publisherlabel[1] == ""){
       publishermatch <- TRUE
     } else {
       for(l in 1:length(publisherlabel)){
@@ -275,7 +282,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
         }
       }
     }
-    if(keywordlabel == ""){
+    if(keywordlabel[1] == ""){
       keywordmatch <- TRUE
     } else {
       for(l in 1:length(keywordlabel)){
