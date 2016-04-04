@@ -221,7 +221,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     #These preliminary tests check if there is a match between the user-defined input and the current row.
     #This code searches in multiple columns for the available keywords.
 
-    if(yearhi == -1 && yearlow == -1){ #(1>0){ different checks
+    if(yearhi == -1 && yearlow == -1){
       yearmatch <- TRUE
     } else {
       if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
