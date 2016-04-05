@@ -13,23 +13,6 @@ library(ggmap)
 library(RColorBrewer)
 library(stringr)
 
-#These are placeholders for the function to see if it works when fed the input.
-#This function filters the raw data in the Articles .csv file for the reactive inputs in the Shiny countries file.
-#countrylabel <- "US"
-#These variables are placeholders made to debug the code before it turns into a function. Keep these a comment when working.
-#data <- countries@data
-#crossFilter <- "UK" 
-#Authors <- ""
-#University <- ""
-#YearLow <- ""
-#YearHigh <- ""
-#Authors <- ""
-#University <- "" 
-#Publisher <- ""
-#GSRankHigh <- ""
-#GSRankLow <- ""
-#KeywordList <- ""
-
 #These lines load the necessary files to run the code: the article spreadsheet, the inital country list. and the country shapefiles. 
 #These articles should be available in the Shiny Global 
 #code when the code is actually running. Thus, it should 
@@ -151,8 +134,6 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     x <- as.numeric(readLines(n=1));
     return(x)
   }
-  
-  maptype <- 0
   
 
   cross <- function(maptype) {
