@@ -21,7 +21,7 @@
       print("line 21");
       data <- data}
     else { 
-      print("line 24")
+      print("line 24") #create a new input input$map filter 
       data <- dataFilter(countries, data, input$crossFilter, "", -1, -1, "", "", "", "")} #outputs a normal data frame 
   })
   

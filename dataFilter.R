@@ -48,6 +48,9 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 
 #Make sure to run the entire file so the adequate variables are available, before running the function at the bottom.
 
+#add a new input variable called maptype that will change once we change the type of map we
+#want in the input. We want to consistently update maptype. 
+
 #here the function starts,
 dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, GSRankLow, GSRankHigh, Authors, University, Publisher,  KeywordList) {
   
@@ -360,7 +363,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, C
     x = writedata()
     if(x==1){
       write.csv(participatory2, file = "test.csv")
-      message("Written, ready, and available. Check here for your file: C:/Users/Pierce/Google Drive/URAP 2016/URAP 2016 Student Folders/Design Impact Literature Review/pierce-mapping/data/test.csv")
+      message("Written, ready, and available. Check in the pierce-mapping folder for your file.") 
       e <- 0
     }else if(x==0){
       message("Okay. Your work is done here!")
@@ -370,9 +373,20 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, C
       e <- 1
     }
   }
-  
-  return(participatory2)
-  print("return line 315")
+
+  print("line 320 data Filter.r");
+  print(maptype);
+  maptype <- 4 #temporary
+  if (maptype==4) { #merge regardless of input. merge for all the options. 
+    countries@data$polyorder <- 1 : dim(countries@data)[1]
+    result <- merge(countries, participatory2, sort = TRUE, all.x = TRUE);
+    print("line 321 data Filter.r");
+    return(result);
+  }
+  return(participatory2);
+  #c("ISO3", "IS02.x", "COUNTRY", "UNM49", "WORK", "ALLPUB","RESTPUB","FIRSTPUB"), 
+  #return(participatory2) #normal data frame; countries = large spatial 
+                        # return large spatial data frame
 }
 
 ########################################################
