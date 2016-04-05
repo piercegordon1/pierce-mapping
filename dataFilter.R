@@ -1,5 +1,4 @@
 
-
 ##########################
 #Pierce Gordon
 #Energy and Resources Group
@@ -41,7 +40,7 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 countries <- readOGR('./world-shapefile', layer = 'world3')
 #These lines merge the participatory and countries dataset.
 countries@data$polyorder <- 1 : dim(countries@data)[1]
-tmp <- merge(countries@data, participatory, by = "ISO3", sort = TRUE, all.x = TRUE)
+tmp <- merge(countries@data, participatory, by = "ISO3", sort = TRUE, all.x = TRUE) #example of merge to merge spatial polygon data frame and normal data frame
 tmp <- tmp[ order(tmp$polyorder), ]
 countries@data <- tmp
 participatory <- read.csv('./data/ParticipatoryData.csv')
@@ -50,7 +49,7 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 
 #here the function starts,
 dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Authors, University, Publisher, GSRank, KeywordList) {
-  
+  #countries = spatial polygon data frame 
   ###For the entire code, all it does it take in the article list, filter it in the needed manner, and return the required country list based upon the inputs given.
   
   #There are two critical variable types I've created here 
@@ -162,6 +161,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #country listed is located in the column of interest, and thus 
   #the list of second countries is worth adding up to the reactive 
   #country index. The column assigned to the variable (Place of Work, 1st Author, etc.) is chosen here.
+  print("line 164 data Filter.r");
   if(crosstype==1){
     crossarray<-articles$Place.of.Work
   }else if(crosstype==2){
@@ -174,6 +174,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     b = articles$Country.of.Publication..1st.Author.);
     crossarray <- rowSums(df)
   } else if(crosstype==4){
+    print("line 177 data Filter.r");
     crossarray<-articles$Country.of.Publication..Rest.of.authors.
   }
   
@@ -186,6 +187,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #}else if(maptype==3){
     #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
   }else if(maptype==4){
+    print("line 190 data Filter.r");
     maparray <- articles$Country.of.Publication..Rest.of.authors.
   }
   
@@ -197,10 +199,10 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
   #cat("Working....")
   for(j in 2:nrow(articles)) {
     #cat(".")
-    if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
+    if(!is.null(articles$Year[j]) && articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
       yearmatch <- TRUE
     }
-    #print("dataFilter.R line 209")
+    
     #These preliminary tests check if there is a match between the user-defined input and the current row.
     authormatch <- grepl(authorlabel, articles$Authors[j])
     universitymatch <- grepl(universitylabel, articles$Place.of.Publish..1st.author.[j])
@@ -220,12 +222,16 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     }
     if(authorlabel == ""){
       authormatch <- TRUE
+    } else {
+      authormatch <- FALSE
     }
     if(universitylabel == ""){
       universitymatch <- TRUE
     }
     if(countrylabel == ""){
       countrymatch <- TRUE
+    } else {
+      countrymatch <- FALSE
     }
     if(publisherlabel == ""){
       publishermatch <- TRUE
@@ -247,7 +253,6 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
     #cat("UNIVERSITY ", universitymatch, "|") 
     #cat("COUNTRY ", countrymatch, "\n")
     
-    
     #This is the filter algorithm. First, it checks if all of the matches in this column are true. If so, it runs the rest of the code.
     if(yearmatch && authormatch && universitymatch && countrymatch && publishermatch && gsrankmatch && keywordmatch) {
       #Loops the countries to search in the desired row for the countries of interest, and prepares participatory2 to be modified by its code.
@@ -267,6 +272,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
             #}else if(maptype==3){
             #  maparray<-articles$Country.of.Publication..Rest.of.authors.+articles$Country.of.Publication..1st.Author.
           }else if(maptype==4){
+            print("line 276 data Filter.r");
             participatory2$RESTPUB[k] <- participatory2$RESTPUB[k] + length(grep(y, maparray[j]))
           }
         }
@@ -310,9 +316,19 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
       e <- 1
     }
   }
-  
-  return(participatory2) #normal data frame countries = large spatial 
-  print("return line 315")
+  print("line 320 data Filter.r");
+  print(maptype);
+  maptype <- 4 #temporary
+  if (maptype==4) {
+    countries@data$polyorder <- 1 : dim(countries@data)[1]
+    result <- merge(countries, participatory2, sort = TRUE, all.x = TRUE);
+    print("line 321 data Filter.r");
+    return(result);
+  }
+  return(participatory2);
+  #c("ISO3", "IS02.x", "COUNTRY", "UNM49", "WORK", "ALLPUB","RESTPUB","FIRSTPUB"), 
+  #return(participatory2) #normal data frame; countries = large spatial 
+                        # return large spatial data frame
 }
 
 ########################################################
@@ -324,17 +340,7 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, A
 ########################################################
 #This file runs the code. Make sure to run the entire file (select all the code, and Run) so the adequate variables are available, before running the function here at the bottom.
 ########################################################
-dataFilter(articles, countries, "", -1, -1, "", "", "", "", "");
-#
-#source("URAP/pierce-mapping/dataFilter.R");
-#Changes;
+dataFilter(articles, countries, "", -1, -1, "", "", "", "", "")
 
+#source("URAP/pierce-mapping/dataFilter.R")
 
-
-
-#Changes
-
-
-
-
-#Hello
