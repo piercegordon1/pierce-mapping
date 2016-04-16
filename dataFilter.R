@@ -52,7 +52,7 @@ participatory <- read.csv('./data/ParticipatoryData.csv')
 #want in the input. We want to consistently update maptype. 
 
 #here the function starts,
-dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, GSRankLow, GSRankHigh, Authors, University, Publisher,  KeywordList) {
+dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, CiteLow, CiteHigh, GSRankLow, GSRankHigh, Authors, University, Publisher, KeywordList) {
   
   #This version of DataFilter is used for use with R+Leaflet interactive mapping app.
   
@@ -64,7 +64,6 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, C
   #the function's user, and the ~matches test if there is 
   #this variable has been assigned a user input.If new 
   #filters need to be made. put them here first
-  
   
   articles <- articlelist
   yearlow <- YearLow
@@ -228,6 +227,8 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, C
     if(yearhi == -1 && yearlow == -1){
       yearmatch <- TRUE
     } else {
+      print(yearhi);
+      print(yearlow);
       if(articles$Year[j] <= yearhi && articles$Year[j] >= yearlow) {
         yearmatch <- TRUE
       }
@@ -373,17 +374,12 @@ dataFilter <- function(articlelist, countries, crossFilter, YearLow, YearHigh, C
       e <- 1
     }
   }
-
-  print("line 320 data Filter.r");
-  print(maptype);
-  maptype <- 4 #temporary
-  if (maptype==4) { #merge regardless of input. merge for all the options. 
+  
+    print(maptype);
     countries@data$polyorder <- 1 : dim(countries@data)[1]
     result <- merge(countries, participatory2, sort = TRUE, all.x = TRUE);
-    print("line 321 data Filter.r");
     return(result);
-  }
-  return(participatory2);
+
   #c("ISO3", "IS02.x", "COUNTRY", "UNM49", "WORK", "ALLPUB","RESTPUB","FIRSTPUB"), 
   #return(participatory2) #normal data frame; countries = large spatial 
                         # return large spatial data frame

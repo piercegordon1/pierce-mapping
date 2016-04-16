@@ -7,22 +7,19 @@
   
   filteredData <- reactive({ #feeds a spatial polygon data frame 
     if (is.null(input$countryFilter)) {
-      print("line 10"); 
       data <- countries} #data = spatial polygon data frame
     else {data <- subset(countries, NAME %in% input$countryFilter)}
     
     if (is.null(input$HideCountry)) {
-      print("line 15");
       data <- data}
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     #subset = gets rid of a column, data is from countries 
     
     if (is.null(input$crossFilter)) {
-      print("line 21");
       data <- data}
     else { 
-      print("line 24") #create a new input input$map filter 
-      data <- dataFilter(countries, data, input$crossFilter, "", -1, -1, "", "", "", "")} #outputs a normal data frame 
+      #create a new input input$map filter 
+      data <- dataFilter(countries, data, input$crossFilter, -1, -1, -1, -1, -1, -1, "", "", "", "")} #outputs a normal data frame 
   })
   
   output$map <- renderLeaflet({
