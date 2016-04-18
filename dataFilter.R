@@ -36,7 +36,7 @@ Sys.setlocale('LC_ALL','C');
 #code when the code is actually running. Thus, it should 
 #not be necessary to have these variables when the function
 #actually runs.
-articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
+articles <- read.csv('./data/Data Scraping for Journal Articles Final 040516.csv')
 participatory <- read.csv('./data/ParticipatoryData.csv')
 countries <- readOGR('./world-shapefile', layer = 'world3')
 #These lines merge the participatory and countries dataset.
