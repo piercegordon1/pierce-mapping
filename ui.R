@@ -18,26 +18,30 @@ shinyUI(
                                                     selectizeInput('countryFilter', 'Show only these countries:',
                                                                    choices = c(countryList), multiple=TRUE),
                                                     selectizeInput('crossFilter', 'Show where this country works:',
-                                                                    choices = countryList2, multiple=TRUE)
-                                                   # sliderInput('citations', 'FIlter by Citations', min, max, value, step = NULL, round = FALSE,
-                                                  #             format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
-                                                  #             width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
-                                                  #             timezone = NULL, dragRange = TRUE),
-                                                  #  sliderInput('lateyear', 'FIlter by Latest Year', min, 2015, value, step = NULL, round = FALSE,
-                                                  #              format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
-                                                  #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
-                                                  #              timezone = NULL, dragRange = TRUE),
-                                                  #  sliderInput('earlyyear', 'FIlter by Earliest Year', min, 2015, value, step = NULL, round = FALSE,
-                                                  #              format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
-                                                  #              width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
-                                                  #              timezone = NULL, dragRange = TRUE),
-                                                  #  selectizeInput('Authors', 'Filter by Authors:',
-                                                  #                  choices= AuthorList, multiple=TRUE),
-                                                  #  selectizeInput('University', "Filter by 1st Author's University:",
-                                                  #                 choices= UniversityList, multiple=TRUE)
-                                                    
-                                                    
-                                                    
+                                                                    choices = countryList2, multiple=TRUE),
+                                                    sliderInput('citations', 'Filter by Citations', min = 0, max = 100, value = 1, step = NULL, round = FALSE,
+                                                               format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                               width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                               timezone = NULL, dragRange = TRUE),
+                                                    sliderInput('Year', 'Filter by Latest Year', min = 1990, max = 2015, value = 1, step = 1, round = FALSE,
+                                                                format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                                width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                                timezone = NULL, dragRange = TRUE),
+                                                    sliderInput('GSRank', 'FIlter by GSRank', min = 0, max=100, value=1, step = 1, round = FALSE,
+                                                                format = NULL, locale = NULL, ticks = TRUE, animate = FALSE,
+                                                                width = NULL, sep = ",", pre = NULL, post = NULL, timeFormat = NULL,
+                                                                timezone = NULL, dragRange = TRUE),
+                                                    selectizeInput('Authors', 'Filter by Authors:',
+                                                                    choices= AuthorList, multiple=TRUE),
+                                                    selectizeInput('University', "Filter by 1st Author's University:",
+                                                                   choices= UniversityList, multiple=TRUE),
+                                                    selectizeInput('Publisher', 'Filter by Publisher:', 
+                                                                   choices= UniversityList, multiple=TRUE),
+                                                    selectizeInput('KeywordList', 'Choose Keywords', 
+                                                              choices = c("Poverty", "Developing Countries", "low-resource settings",
+                                                                          "low-income", "developing world", "third world", 
+                                                                          "resource-limited settings", "resource-limited", 
+                                                                          "Global Inequality", "international development"), multiple=TRUE)
                                           )
                             )
                             )

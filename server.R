@@ -40,6 +40,7 @@
   #create reactive colorVariable, which updates the color palette based on the type of map chosen.
   colorVariable <- reactive({
     print("server.R line 43")
+    # Error: trying to get slot "data" from an object (class "data.frame") that is not an S4 object 
     filteredData()@data[[input$MapFilter]]
   })
   
@@ -54,6 +55,7 @@
   observe({
     print("server.R line 55")
     pal <- colorpal() #set the variable pal equal to the reactive variable colorpal.
+    #Where the fourth option breaks!
     colorBy <- input$MapFilter
     leafletProxy("map", data = filteredData()) %>%
       clearShapes() %>%
@@ -64,5 +66,6 @@
                   popup = ~paste("<strong>",colorBy,":</strong>",filteredData()@data[,colorBy], "<strong>Country:</strong>",NAME)) %>% 
       addLegend(title=colorBy, pal=colorpal(), values=filteredData()@data[,colorBy], position="bottomright")
     print("server.R line 64")
+    print("End");
   })
 }
