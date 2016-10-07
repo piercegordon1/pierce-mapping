@@ -37,10 +37,10 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
   
   ###For the entire code, all it does it take in the article list, filter it in the needed manner, and return the required country list based upon the inputs given.
   
-  #There are two critical variable types I’ve created here 
+  #There are two critical variable types Ive created here 
   #that the filter loops use: the labels, and the matches. 
   #~Labels are assigned the inputs fed into DataFilter by 
-  #the function’s user, and the ~matches test if there is 
+  #the functions user, and the ~matches test if there is 
   #this variable has been assigned a user input.If new 
   #filters need to be made. put them here first
   
@@ -68,7 +68,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
 
   
   if(Authors!="") {
-    authorlabel <- unlist(strsplit(authorlabel, " "))
+    authorlabel <- unlist(strsplit(authorlabel, ","))
   }
   if(University!="") {
     universitylabel <- unlist(strsplit(universitylabel, " ")) 
@@ -154,6 +154,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     
     }
   }
+  
   
   maptype <- map()
   crosstype <- cross(maptype)

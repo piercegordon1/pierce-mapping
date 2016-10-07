@@ -7,18 +7,19 @@
   #Sets the necessary filters read from the UI
   
   filteredData <- reactive({
-    if (is.null(input$countryFilter)) {data <- countries}
+    
+    if (is.null(input$crossFilter)) {data <- countries}
+    else { 
+      print("server.R line 19")
+      data <- dataFilter(articles, countries, "", -1, -1, -1, -1, -1, -1, "", "", "", "")}
+      #print("server.R line 21")
+    
+    if (is.null(input$countryFilter)) {data <- data}
     else {data <- subset(countries, NAME %in% input$countryFilter)}
     
     if (is.null(input$HideCountry)) {data <- data}
     else {data <- subset(data, !(NAME %in% input$HideCountry))}
     #subset = gets rid of a column, data is from countries 
-    
-    if (is.null(input$crossFilter)) {data <- data}
-    else { 
-      print("server.R line 19")
-      data <- dataFilter(countries, data, input$crossFilter, "", -1, -1, "", "", "", "")}
-      #print("server.R line 21")
   })
   
   #observe ( {

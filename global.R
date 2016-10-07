@@ -10,7 +10,7 @@ source("./dataFilter.R")
 
 #############################
 countries <- readOGR('./world-shapefile', layer = 'world3')
-articles <- read.csv('./data/Data Scraping for Journal Articles.csv')
+articles <- read.csv('./data/Data Scraping for Journal Articles Final 041916.csv')
 
 participatory <- read.csv('./data/ParticipatoryData.csv')
 
