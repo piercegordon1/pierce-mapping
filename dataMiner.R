@@ -68,19 +68,19 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
 
   
   if(Authors!="") {
-    authorlabel <- unlist(strsplit(authorlabel, ","))
+    authorlabel <- unlist(strsplit(authorlabel, ", "))
   }
   if(University!="") {
-    universitylabel <- unlist(strsplit(universitylabel, " ")) 
+    universitylabel <- unlist(strsplit(universitylabel, ", ")) 
   }
   if(crossFilter!="") {
-    countrylabel <- unlist(strsplit(countrylabel, " "))
+    countrylabel <- unlist(strsplit(countrylabel, ", "))
   }
   if(Publisher!="") {
-    publisherlabel <- unlist(strsplit(publisherlabel, " "))
+    publisherlabel <- unlist(strsplit(publisherlabel, ", "))
   }
   if(KeywordList!="") {
-    keywordlabel <- unlist(strsplit(keywordlabel, " "))
+    keywordlabel <- unlist(strsplit(keywordlabel, ", "))
   }
   
   
