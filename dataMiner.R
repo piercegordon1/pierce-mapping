@@ -141,7 +141,7 @@ dataMiner <- function(articlelist, countries, crossFilter, YearLow, YearHigh, Ci
     if(maptype==1){
       if(crossFilter != "") {
       #if(1>0) {
-      message("What type of Author Column do you want to be the filter? 2 == 1stAuth, 3 == AllAuth, 4 == RestAuth ");
+      message("What type of Author Column do you want to be the filter? 2 == 1stAuth, 3 == RestAuth, 4 == AllAuth");
       x <- as.numeric(readLines(n=1));  
       return(x)
       } else {
